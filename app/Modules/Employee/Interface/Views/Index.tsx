@@ -1,6 +1,5 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Filter, MoreHorizontal, Mail, Phone, Users, UserCheck, Clock, UserX } from 'lucide-react';
-import AddEmployeeDialog from '@/components/employee/AddEmployeeDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -25,6 +24,7 @@ import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, Employee, EmployeeStatistics, Manager } from '@/types';
 import { getEmployeeStatusStyle } from '@/types/employee';
 import type { Pagination } from '@/types/pagination';
+import AddEmployeeDialog from '@/components/employee/add-employee-dialog';
 
 interface PageProps {
     employees: Pagination<Employee>;

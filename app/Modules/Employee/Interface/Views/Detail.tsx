@@ -17,7 +17,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { formatCurrency, formatDate } from '@/lib/format';
 import type { BreadcrumbItem, Employee, Manager } from '@/types';
-import { getEmployeeStatusStyle, EmployeeStatus } from '@/types/employee';
+import { getEmployeeStatusStyle } from '@/types/employee';
 
 interface PageProps {
     employee: Employee;
