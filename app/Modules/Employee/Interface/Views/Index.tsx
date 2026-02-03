@@ -65,7 +65,7 @@ export default function EmployeeIndex() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Employees" />
-            <div className="flex h-full flex-1 flex-col gap-6 p-6">
+            <div className="flex h-full flex-1 flex-col gap-6 p-6 animate-fade-in">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
@@ -136,7 +136,7 @@ export default function EmployeeIndex() {
                     {employees.data.map((employee: Employee) => (
                         <Card
                             key={employee.id}
-                            className="group overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1"
+                            className="group hover-lift overflow-hidden"
                         >
                             <CardContent className="p-0">
                                 <div className="h-16 bg-gradient-to-r from-blue-500/10 to-purple-500/10" />

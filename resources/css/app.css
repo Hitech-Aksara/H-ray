@@ -141,3 +141,60 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Success and Warning colors */
+:root {
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+}
+
+.dark {
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+}
+
+@layer utilities {
+
+    /* Fade-in animation for page transitions */
+    .animate-fade-in {
+        animation: fade-in 0.3s ease-out;
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Hover lift effect for cards */
+    .hover-lift {
+        @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg;
+    }
+
+    /* Status badge styles */
+    .status-active {
+        background-color: hsl(var(--success) / 0.1);
+        color: hsl(var(--success));
+        border-color: hsl(var(--success) / 0.2);
+    }
+
+    .status-pending {
+        background-color: hsl(var(--warning) / 0.1);
+        color: hsl(var(--warning));
+        border-color: hsl(var(--warning) / 0.2);
+    }
+
+    .status-inactive {
+        @apply bg-muted text-muted-foreground border-muted;
+    }
+}
