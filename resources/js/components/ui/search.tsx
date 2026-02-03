@@ -1,8 +1,15 @@
 import { router } from '@inertiajs/react';
 import { Search as SearchIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { usePrevious } from 'react-use';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
+
+function usePrevious<T>(value: T): T | undefined {
+    const ref = useRef<T>(undefined);
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
 import {
     Select,
     SelectContent,
