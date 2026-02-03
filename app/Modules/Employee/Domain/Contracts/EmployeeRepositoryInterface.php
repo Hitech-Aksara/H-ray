@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace App\Modules\Employee\Domain\Contracts;
 
 use App\Modules\Employee\Infrastructure\Database\Models\Employee;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface EmployeeRepositoryInterface
 {
-    public function getAll(array $filters = []): Collection;
-
-    public function getPaginated(array $filters = [], int $perPage = 15): LengthAwarePaginator;
+    public function getAll(): Collection;
 
     public function findById(int $id): ?Employee;
 

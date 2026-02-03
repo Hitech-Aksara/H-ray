@@ -6,7 +6,6 @@ namespace App\Modules\Employee\Infrastructure\Repositories;
 
 use App\Modules\Employee\Domain\Contracts\EmployeeRepositoryInterface;
 use App\Modules\Employee\Infrastructure\Database\Models\Employee;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class EmployeeRepository implements EmployeeRepositoryInterface
@@ -15,22 +14,12 @@ class EmployeeRepository implements EmployeeRepositoryInterface
         protected Employee $employeeModel
     ) {}
 
-    public function getAll(array $filters = []): Collection
+    public function getAll(): Collection
     {
-        $query = $this->employeeModel->query()->with('manager');
-
-        $this->applyFilters($query, $filters);
-
-        return $query->orderBy('last_name')->get();
-    }
-
-    public function getPaginated(array $filters = [], int $perPage = 15): LengthAwarePaginator
-    {
-        $query = $this->employeeModel->query()->with('manager');
-
-        $this->applyFilters($query, $filters);
-
-        return $query->orderBy('last_name')->paginate($perPage);
+        return $this->employeeModel->query()
+            ->with('manager')
+            ->orderBy('last_name')
+            ->get();
     }
 
     public function findById(int $id): ?Employee
@@ -90,25 +79,5 @@ class EmployeeRepository implements EmployeeRepositoryInterface
         }
 
         return $query->get();
-    }
-    protected function applyFilters($query, array $filters): void
-    {
-        if (! empty($filters['s'])) {
-            $search = $filters['s'];
-            $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('position', 'like', "%{$search}%");
-            });
-        }
-
-        if (! empty($filters['department'])) {
-            $query->where('department', $filters['department']);
-        }
-
-        if (! empty($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
     }
 }

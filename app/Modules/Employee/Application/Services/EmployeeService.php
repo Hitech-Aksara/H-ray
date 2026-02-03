@@ -14,22 +14,40 @@ use Inertia\Response;
 class EmployeeService
 {
     public function __construct(
-        protected EmployeeRepositoryInterface $employeeRepository
+        protected EmployeeRepositoryInterface $employeeRepository,
+        protected Employee $employeeModel
     ) {}
 
-    public function getAllEmployees(array $filters = []): Collection
+    public function getAllEmployees(): Collection
     {
-        return $this->employeeRepository->getAll($filters);
+        return $this->employeeRepository->getAll();
     }
 
-    public function getPaginatedEmployees(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    public function getPaginatedEmployees(array $filters = []): LengthAwarePaginator
     {
-        $data = $this->employeeRepository->getPaginated($filters, $perPage);
+        $query = $this->employeeModel->query()->with('manager');
 
-        $data->appends(array_merge(
-            request()->query(),
-            $filters
-        ));
+        $query->when(! empty($filters['s']), function ($q) use ($filters) {
+            $search = $filters['s'];
+            $q->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('position', 'like', "%{$search}%");
+            });
+        });
+
+        $query->when(! empty($filters['department']), function ($q) use ($filters) {
+            $q->where('department', $filters['department']);
+        });
+
+        $query->when(! empty($filters['status']), function ($q) use ($filters) {
+            $q->where('status', $filters['status']);
+        });
+
+        $data = $query->orderBy('last_name')->paginate($filters['limit'] ?? 10);
+
+        $data->appends(request()->query());
 
         return $data;
     }
@@ -81,10 +99,8 @@ class EmployeeService
 
     public function renderIndex(array $filters): Response
     {
-        $perPage = (int) ($filters['limit'] ?? 10);
-
         return Inertia::render('Employee/Index', [
-            'employees' => $this->getPaginatedEmployees($filters, $perPage),
+            'employees' => $this->getPaginatedEmployees($filters),
             'departments' => $this->getDepartments(),
             'statistics' => $this->getStatistics(),
             'managers' => $this->getManagerOptions(),

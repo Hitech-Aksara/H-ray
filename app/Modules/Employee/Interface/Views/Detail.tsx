@@ -1,13 +1,11 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft, Mail, Phone, MapPin, Briefcase, Users, Edit, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import AppLayout from '@/layouts/app-layout';
-import { formatCurrency, formatDate } from '@/lib/format';
-import EmployeeForm, { type EmployeeFormData } from '@/components/employee/EmployeeForm';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import EmployeeForm, { type EmployeeFormData } from '@/components/employee/employee-form';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Dialog,
     DialogContent,
@@ -16,6 +14,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import AppLayout from '@/layouts/app-layout';
+import { formatCurrency, formatDate } from '@/lib/format';
 import type { BreadcrumbItem, Employee, Manager } from '@/types';
 import { getEmployeeStatusStyle, EmployeeStatus } from '@/types/employee';
 

@@ -1,14 +1,18 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Filter, MoreHorizontal, Mail, Phone, Users, UserCheck, Clock, UserX } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
-import Search from '@/components/ui/search';
-import Paginate from '@/components/ui/paginate';
 import AddEmployeeDialog from '@/components/employee/AddEmployeeDialog';
-import { useFilter } from '@/hooks/use-filter';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import Paginate from '@/components/ui/paginate';
+import Search from '@/components/ui/search';
 import {
     Select,
     SelectContent,
@@ -16,12 +20,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { useFilter } from '@/hooks/use-filter';
+import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, Employee, EmployeeStatistics, Manager } from '@/types';
 import { getEmployeeStatusStyle } from '@/types/employee';
 import type { Pagination } from '@/types/pagination';

@@ -10,8 +10,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import EmployeeForm, { type EmployeeFormData } from './EmployeeForm';
 import type { Manager } from '@/types';
+import EmployeeForm, { type EmployeeFormData } from './employee-form';
 
 interface AddEmployeeDialogProps {
     departments: string[];
