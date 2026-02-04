@@ -1,14 +1,18 @@
 import { router } from '@inertiajs/react';
 import { Search as SearchIcon } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 
 function usePrevious<T>(value: T): T | undefined {
-    const ref = useRef<T>(undefined);
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
+    const [prev, setPrev] = useState<T | undefined>(undefined);
+    const [current, setCurrent] = useState<T>(value);
+
+    if (value !== current) {
+        setPrev(current);
+        setCurrent(value);
+    }
+
+    return prev;
 }
 import {
     Select,

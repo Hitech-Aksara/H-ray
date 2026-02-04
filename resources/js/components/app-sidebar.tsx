@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Calendar, Clock, LayoutDashboard, Network, Settings, Users } from 'lucide-react';
+import { LayoutDashboard, Users } from 'lucide-react';
 import { NavMain } from '@/components/nav-main';
 import {
     Sidebar,

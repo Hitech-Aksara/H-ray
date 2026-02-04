@@ -1,8 +1,8 @@
 import { usePage } from '@inertiajs/react';
 import { Bell, Search } from 'lucide-react';
+import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -65,17 +65,17 @@ export function AppSidebarHeader({
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="flex items-center gap-3 pr-2">
                             <Avatar className="h-8 w-8">
-                                <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
-                                <AvatarFallback>{getInitials(auth.user.name)}</AvatarFallback>
+                                <AvatarImage src={auth.user?.avatar} alt={auth.user?.name} />
+                                <AvatarFallback>{getInitials(auth.user?.name ?? '')}</AvatarFallback>
                             </Avatar>
                             <div className="hidden flex-col items-start text-left md:flex">
-                                <span className="text-sm font-medium">{auth.user.name}</span>
-                                <span className="text-xs text-muted-foreground">{auth.user.email}</span>
+                                <span className="text-sm font-medium">{auth.user?.name}</span>
+                                <span className="text-xs text-muted-foreground">{auth.user?.email}</span>
                             </div>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
-                        <UserMenuContent user={auth.user} />
+                        {auth.user && <UserMenuContent user={auth.user} />}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
