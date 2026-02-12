@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Employee\Infrastructure\Database\Seeders;
 
 use App\Modules\Employee\Infrastructure\Database\Models\Employee;
+use App\Modules\User\Infrastructure\Database\Models\User;
 use Illuminate\Database\Seeder;
 
 class EmployeeSeeder extends Seeder
@@ -12,7 +13,7 @@ class EmployeeSeeder extends Seeder
     public function run(): void
     {
         // Create CEO (no manager)
-        $ceo = Employee::create([
+        $ceo = $this->createEmployee([
             'first_name' => 'John',
             'last_name' => 'Smith',
             'email' => 'john.smith@company.com',
@@ -30,7 +31,7 @@ class EmployeeSeeder extends Seeder
         ]);
 
         // Create Department Heads
-        $hrHead = Employee::create([
+        $hrHead = $this->createEmployee([
             'first_name' => 'Sarah',
             'last_name' => 'Johnson',
             'email' => 'sarah.johnson@company.com',
@@ -48,7 +49,7 @@ class EmployeeSeeder extends Seeder
             'personal_leave_balance' => 7,
         ]);
 
-        $engHead = Employee::create([
+        $engHead = $this->createEmployee([
             'first_name' => 'Michael',
             'last_name' => 'Chen',
             'email' => 'michael.chen@company.com',
@@ -66,7 +67,7 @@ class EmployeeSeeder extends Seeder
             'personal_leave_balance' => 7,
         ]);
 
-        $finHead = Employee::create([
+        $finHead = $this->createEmployee([
             'first_name' => 'Emily',
             'last_name' => 'Williams',
             'email' => 'emily.williams@company.com',
@@ -172,7 +173,7 @@ class EmployeeSeeder extends Seeder
         ];
 
         foreach ($employees as $empData) {
-            Employee::create(array_merge([
+            $this->createEmployee(array_merge([
                 'phone' => '+1234567' . rand(100, 999),
                 'employment_type' => 'Full-time',
                 'status' => 'Active',
@@ -183,5 +184,21 @@ class EmployeeSeeder extends Seeder
                 'personal_leave_balance' => rand(3, 7),
             ], $empData));
         }
+    }
+
+    /**
+     * Create an employee and link to matching user account if exists.
+     */
+    private function createEmployee(array $data): Employee
+    {
+        $employee = Employee::create($data);
+
+        // Link to user account with same email
+        $user = User::where('email', $data['email'])->first();
+        if ($user) {
+            $employee->update(['user_id' => $user->id]);
+        }
+
+        return $employee;
     }
 }

@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { LayoutDashboard, Users } from 'lucide-react';
+import { LayoutDashboard, Settings, Users } from 'lucide-react';
 import { NavMain } from '@/components/nav-main';
 import {
     Sidebar,
@@ -10,7 +10,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { usePermission } from '@/hooks/use-permission';
 import { dashboard } from '@/routes';
+import user from '@/routes/user';
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
 
@@ -19,16 +21,29 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutDashboard,
+        permission: 'dashboard',
     },
     {
         title: 'Employees',
         href: '/employee',
         icon: Users,
+        permission: 'employee',
     },
-
+    {
+        title: 'Menu Setting',
+        href: user.index.url(),
+        icon: Settings,
+        permission: 'user',
+    },
 ];
 
 export function AppSidebar() {
+    const { canAny } = usePermission();
+
+    const filteredItems = mainNavItems.filter(
+        (item) => !item.permission || canAny(item.permission),
+    );
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -44,7 +59,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={filteredItems} />
             </SidebarContent>
 
             <SidebarFooter />

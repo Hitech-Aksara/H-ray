@@ -21,6 +21,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useFilter } from '@/hooks/use-filter';
+import { usePermission } from '@/hooks/use-permission';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, Employee, EmployeeStatistics, Manager } from '@/types';
 import { getEmployeeStatusStyle } from '@/types/employee';
@@ -55,6 +56,11 @@ export default function EmployeeIndex() {
         },
     });
 
+    const { can } = usePermission();
+    const canCreate = can('employee.create');
+    const canEdit = can('employee.edit');
+    const canDelete = can('employee.delete');
+
     const statCards = [
         { title: 'Total Employees', value: statistics.total, icon: Users, color: 'text-blue-600' },
         { title: 'Active', value: statistics.active, icon: UserCheck, color: 'text-green-600' },
@@ -72,7 +78,7 @@ export default function EmployeeIndex() {
                         <h1 className="text-2xl font-semibold">Employees</h1>
                         <p className="text-muted-foreground">Manage your team members</p>
                     </div>
-                    <AddEmployeeDialog departments={departments} managers={managers} />
+                    {canCreate && <AddEmployeeDialog departments={departments} managers={managers} />}
                 </div>
 
                 {/* Statistics Cards */}
@@ -162,33 +168,37 @@ export default function EmployeeIndex() {
                                             </Link>
                                             <p className="text-sm text-muted-foreground">{employee.position}</p>
                                         </div>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem asChild>
-                                                    <Link href={`/employee/${employee.id}`}>View Profile</Link>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    className={employee.status === 'Active' ? 'text-red-600' : 'text-green-600'}
-                                                    onClick={() => {
-                                                        router.put(`/employee/${employee.id}`, {
-                                                            first_name: employee.first_name,
-                                                            last_name: employee.last_name,
-                                                            email: employee.email,
-                                                            department: employee.department,
-                                                            position: employee.position,
-                                                            status: employee.status === 'Active' ? 'Inactive' : 'Active',
-                                                        }, { preserveScroll: true });
-                                                    }}
-                                                >
-                                                    {employee.status === 'Active' ? 'Deactivate' : 'Activate'}
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        {(canEdit || canDelete) && (
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem asChild>
+                                                        <Link href={`/employee/${employee.id}`}>View Profile</Link>
+                                                    </DropdownMenuItem>
+                                                    {canEdit && (
+                                                        <DropdownMenuItem
+                                                            className={employee.status === 'Active' ? 'text-red-600' : 'text-green-600'}
+                                                            onClick={() => {
+                                                                router.put(`/employee/${employee.id}`, {
+                                                                    first_name: employee.first_name,
+                                                                    last_name: employee.last_name,
+                                                                    email: employee.email,
+                                                                    department: employee.department,
+                                                                    position: employee.position,
+                                                                    status: employee.status === 'Active' ? 'Inactive' : 'Active',
+                                                                }, { preserveScroll: true });
+                                                            }}
+                                                        >
+                                                            {employee.status === 'Active' ? 'Deactivate' : 'Activate'}
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        )}
                                     </div>
 
                                     <div className="mt-4 flex items-center gap-2">

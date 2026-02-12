@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Employee\Infrastructure\Database\Models;
 
+use App\Modules\User\Infrastructure\Database\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,7 @@ class Employee extends Model
     protected $table = 'employees';
 
     protected $fillable = [
+        'user_id',
         'first_name',
         'last_name',
         'email',
@@ -43,6 +45,11 @@ class Employee extends Model
             'sick_leave_balance' => 'integer',
             'personal_leave_balance' => 'integer',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function manager(): BelongsTo
