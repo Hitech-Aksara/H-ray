@@ -15,6 +15,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
+import { usePermission } from '@/hooks/use-permission';
 import { formatCurrency, formatDate } from '@/lib/format';
 import type { BreadcrumbItem, Employee, Manager } from '@/types';
 import { getEmployeeStatusStyle } from '@/types/employee';
@@ -28,6 +29,9 @@ interface PageProps {
 export default function EmployeeDetail() {
     const { employee, managers } = usePage<PageProps>().props;
     const [isEditing, setIsEditing] = useState(false);
+    const { can } = usePermission();
+    const canEdit = can('employee.edit');
+    const canDelete = can('employee.delete');
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/' },
@@ -76,37 +80,41 @@ export default function EmployeeDetail() {
                         Back to Employees
                     </Link>
                     <div className="flex gap-2">
-                        <Dialog open={isEditing} onOpenChange={setIsEditing}>
-                            <DialogTrigger asChild>
-                                <Button variant="outline">
-                                    <Edit className="mr-2 h-4 w-4" />
-                                    Edit
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                                <DialogHeader>
-                                    <DialogTitle>Edit Employee</DialogTitle>
-                                    <DialogDescription>
-                                        Update employee information below.
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <EmployeeForm
-                                    data={data}
-                                    setData={setData}
-                                    errors={errors}
-                                    processing={processing}
-                                    onSubmit={handleUpdate}
-                                    onCancel={() => setIsEditing(false)}
-                                    managers={managers}
-                                    submitLabel="Save Changes"
-                                    submitLoadingLabel="Saving..."
-                                />
-                            </DialogContent>
-                        </Dialog>
-                        <Button variant="destructive" onClick={handleDelete}>
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                        </Button>
+                        {canEdit && (
+                            <Dialog open={isEditing} onOpenChange={setIsEditing}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline">
+                                        <Edit className="mr-2 h-4 w-4" />
+                                        Edit
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>Edit Employee</DialogTitle>
+                                        <DialogDescription>
+                                            Update employee information below.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <EmployeeForm
+                                        data={data}
+                                        setData={setData}
+                                        errors={errors}
+                                        processing={processing}
+                                        onSubmit={handleUpdate}
+                                        onCancel={() => setIsEditing(false)}
+                                        managers={managers}
+                                        submitLabel="Save Changes"
+                                        submitLoadingLabel="Saving..."
+                                    />
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                        {canDelete && (
+                            <Button variant="destructive" onClick={handleDelete}>
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                            </Button>
+                        )}
                     </div>
                 </div>
 

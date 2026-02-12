@@ -35,11 +35,26 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $permissions = [];
+        if ($request->user()) {
+            if ($request->user()->hasRole('Super Admin')) {
+                $permissions = 'Super Admin';
+            } else {
+                $permissions = $request->user()->getPermissionsViaRoles()->pluck('name')->toArray();
+            }
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                'permissions' => $permissions,
+                'is_impersonating' => $request->session()->has('impersonator_id'),
+            ],
+            'flash' => [
+                'type' => fn() => $request->session()->get('type'),
+                'messages' => fn() => $request->session()->get('messages'),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
